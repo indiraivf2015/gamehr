@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gamethon - Indira IVF Culture Club</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #2C2C2A;
+  }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  h1 { font-size: 28px; color: #0C447C; margin-bottom: 8px; }
+  .subtitle { font-size: 14px; color: #5F5E5A; margin-bottom: 24px; }
+
+  /* LOGIN */
+  .login-box { max-width: 420px; margin: 40px auto; text-align: center; }
+  .login-box h1 { font-size: 32px; margin-bottom: 8px; }
+  .login-box .subtitle { margin-bottom: 32px; font-size: 15px; }
+  .form-group { margin-bottom: 18px; text-align: left; }
+  .form-group label {
+    display: block; font-size: 13px; font-weight: 600; color: #444441;
+    margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .form-group input {
+    width: 100%; padding: 12px 14px; font-size: 15px;
+    border: 2px solid #D3D1C7; border-radius: 8px; background: white;
+    transition: border-color 0.15s; font-family: inherit;
+  }
+  .form-group input:focus { outline: none; border-color: #185FA5; }
+  .btn-primary {
+    background: #185FA5; color: white; border: none; border-radius: 8px;
+    padding: 14px 28px; font-size: 15px; font-weight: 600; cursor: pointer;
+    transition: all 0.15s; width: 100%; margin-top: 8px;
+  }
+  .btn-primary:hover { background: #0C447C; transform: translateY(-1px); }
+  .btn-secondary {
+    background: transparent; color: #444441; border: 2px solid #D3D1C7;
+    border-radius: 8px; padding: 10px 20px; font-size: 14px; font-weight: 500;
+    cursor: pointer;
+  }
+  .btn-secondary:hover { background: #F1EFE8; border-color: #888780; }
+  .btn-warn {
+    background: #BA7517; color: white; border: none; border-radius: 8px;
+    padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+  .btn-warn:hover { background: #854F0B; }
+  .error-msg { color: #A32D2D; font-size: 13px; margin-top: 8px; }
+
+  /* START SCREEN */
+  .start-screen { text-align: center; padding: 40px 20px; }
+  .start-screen h1 { font-size: 36px; margin-bottom: 12px; }
+  .welcome-text { font-size: 18px; color: #444441; margin-bottom: 8px; }
+  .rules-box {
+    background: #E6F1FB; border-radius: 12px; padding: 24px; margin: 32px auto;
+    max-width: 560px; text-align: left;
+  }
+  .rules-box h3 { font-size: 16px; color: #0C447C; margin-bottom: 12px; }
+  .rules-box ul { padding-left: 20px; font-size: 14px; color: #444441; line-height: 1.8; }
+  .start-btn {
+    background: linear-gradient(135deg, #185FA5, #378ADD);
+    color: white; border: none; border-radius: 12px;
+    padding: 18px 48px; font-size: 18px; font-weight: 700; cursor: pointer;
+    box-shadow: 0 8px 20px rgba(24,95,165,0.4); margin-top: 16px;
+  }
+  .start-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(24,95,165,0.5); }
+
+  /* GAME HEADER */
+  .game-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #E5E3DD;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .player-info { font-size: 14px; color: #444441; }
+  .player-info strong { color: #0C447C; }
+  .game-stats { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .stat-pill {
+    background: #F1EFE8; padding: 8px 14px; border-radius: 8px;
+    font-size: 13px; font-weight: 600; color: #444441;
+  }
+  .stat-pill strong { color: #0C447C; }
+  .timer-pill {
+    background: #EAF3DE; color: #27500A; padding: 10px 18px; border-radius: 8px;
+    font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums;
+    border: 2px solid #97C459;
+  }
+  .timer-pill.warning { background: #FAEEDA; color: #854F0B; border-color: #EF9F27; }
+  .timer-pill.danger { background: #FCEBEB; color: #791F1F; border-color: #E24B4A; animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+  .level-info {
+    background: #E6F1FB; padding: 12px 18px; border-radius: 8px;
+    margin-bottom: 16px; display: flex; justify-content: space-between;
+    align-items: center; font-size: 14px; flex-wrap: wrap; gap: 8px;
+  }
+  .level-info strong { color: #185FA5; font-size: 16px; }
+  .instruction { font-size: 14px; color: #5F5E5A; margin-bottom: 12px; }
+  .game-actions { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+  .feedback {
+    padding: 12px 16px; border-radius: 8px; margin-bottom: 16px;
+    font-size: 14px; font-weight: 600; text-align: center;
+  }
+  .feedback.success { background: #EAF3DE; color: #27500A; border: 1px solid #97C459; }
+  .feedback.info { background: #E6F1FB; color: #0C447C; border: 1px solid #85B7EB; }
+  .feedback.error { background: #FCEBEB; color: #791F1F; border: 1px solid #E24B4A; }
+
+  /* SPOT THE DIFFERENCE */
+  .spot-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .spot-img {
+    position: relative; aspect-ratio: 1;
+    border: 3px solid #D3D1C7; border-radius: 12px;
+    overflow: hidden; cursor: crosshair; background: #F1EFE8;
+  }
+  .spot-img.right { border-color: #185FA5; }
+  .spot-label {
+    position: absolute; top: 8px; left: 8px; background: rgba(255,255,255,0.95);
+    padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700;
+    color: #0C447C; z-index: 2;
+  }
+  .spot-marker {
+    position: absolute; width: 34px; height: 34px;
+    border: 3px solid #3B6D11; border-radius: 50%;
+    transform: translate(-50%, -50%); pointer-events: none;
+    background: rgba(151,196,89,0.4); animation: pop 0.3s;
+  }
+  .wrong-click {
+    position: absolute; width: 30px; height: 30px;
+    border: 3px solid #E24B4A; border-radius: 50%;
+    transform: translate(-50%, -50%); pointer-events: none;
+    background: rgba(226,75,74,0.3); animation: fadeOut 0.8s forwards;
+  }
+  @keyframes pop { from { transform: translate(-50%, -50%) scale(0); } to { transform: translate(-50%, -50%) scale(1); } }
+  @keyframes fadeOut { 0% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); } }
+
+  /* JUMBLE */
+  .jumble-area { text-align: center; padding: 20px 0; }
+  .hint-box {
+    background: #FAEEDA; border-left: 4px solid #EF9F27;
+    padding: 14px 18px; border-radius: 8px; margin-bottom: 24px;
+    text-align: left; font-size: 14px; color: #633806;
+  }
+  .hint-box strong { color: #412402; }
+  .answer-slots { display: flex; gap: 8px; justify-content: center; margin: 20px 0; flex-wrap: wrap; min-height: 54px; }
+  .slot {
+    width: 48px; height: 48px;
+    border: 2px dashed #B4B2A9;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    background: white;
+  }
+  .slot.filled { background: #185FA5; color: white; border-style: solid; border-color: #185FA5; }
+  .jumble-tiles { display: flex; gap: 8px; justify-content: center; margin: 20px 0; flex-wrap: wrap; }
+  .letter-tile {
+    width: 48px; height: 48px;
+    border: 2px solid #185FA5;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 700;
+    background: #E6F1FB;
+    color: #0C447C;
+    cursor: pointer;
+    user-select: none;
+    text-transform: uppercase;
+    transition: all 0.15s;
+  }
+  .letter-tile:hover { background: #B5D4F4; transform: translateY(-2px); }
+
+  /* MATCH */
+  .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  .match-col-title {
+    font-size: 13px; color: #5F5E5A; margin-bottom: 10px;
+    text-align: center; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .match-item {
+    padding: 14px 16px; border: 2px solid #D3D1C7; border-radius: 8px;
+    background: white; cursor: pointer; font-size: 14px;
+    margin-bottom: 10px; transition: all 0.15s;
+  }
+  .match-item:hover { background: #E6F1FB; border-color: #185FA5; }
+  .match-item.selected { background: #B5D4F4; border-color: #185FA5; color: #0C447C; font-weight: 600; }
+  .match-item.matched { background: #EAF3DE; border-color: #639922; color: #27500A; cursor: default; pointer-events: none; font-weight: 500; }
+  .match-item.wrong { background: #FCEBEB; border-color: #E24B4A; color: #791F1F; animation: shake 0.4s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+
+  /* MAZE (patient to doctor) */
+  .maze-wrap {
+    display: flex; justify-content: center; margin: 20px 0;
+    padding: 20px; background: #F1EFE8; border-radius: 12px;
+  }
+  .maze-grid {
+    display: grid;
+    gap: 2px;
+    padding: 4px;
+    background: #444441;
+    border-radius: 8px;
+    touch-action: none;
+  }
+  .maze-cell {
+    width: 26px; height: 26px;
+    background: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+  .maze-cell.wall { background: #2C2C2A; }
+  .maze-cell.path { background: #B5D4F4; }
+  .maze-cell.start { background: #97C459; }
+  .maze-cell.end { background: #F09595; }
+  .maze-cell.player {
+    background: #185FA5; color: white;
+    font-weight: 700; border-radius: 50%;
+    box-shadow: 0 0 8px rgba(24,95,165,0.5);
+  }
+  .maze-controls {
+    display: grid; grid-template-columns: repeat(3, 56px);
+    gap: 6px; justify-content: center; margin-top: 16px;
+  }
+  .maze-btn {
+    width: 56px; height: 56px;
+    border: 2px solid #185FA5;
+    background: #E6F1FB;
+    border-radius: 8px;
+    font-size: 22px;
+    color: #0C447C;
+    cursor: pointer;
+    font-weight: 700;
+  }
+  .maze-btn:hover { background: #B5D4F4; }
+  .maze-btn:active { background: #185FA5; color: white; }
+  .maze-btn.empty { visibility: hidden; }
+
+  /* TIC-TAC-TOE */
+  .ttt-wrap { text-align: center; padding: 10px 0; }
+  .ttt-mode { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+  .mode-btn {
+    padding: 8px 16px; font-size: 14px;
+    border: 2px solid #D3D1C7; background: white;
+    border-radius: 8px; cursor: pointer; font-weight: 500;
+  }
+  .mode-btn.active { background: #185FA5; border-color: #185FA5; color: white; }
+  .ttt-status {
+    display: inline-block; padding: 10px 20px; background: #E6F1FB;
+    border-radius: 8px; margin-bottom: 16px; font-size: 15px; font-weight: 600;
+    color: #0C447C; border: 1px solid #85B7EB;
+  }
+  .ttt-status.win { background: #EAF3DE; color: #27500A; border-color: #97C459; }
+  .ttt-status.lose { background: #FCEBEB; color: #791F1F; border-color: #E24B4A; }
+  .ttt-status.draw { background: #FAEEDA; color: #854F0B; border-color: #EF9F27; }
+  .ttt-board {
+    display: grid; grid-template-columns: repeat(3, 80px); grid-template-rows: repeat(3, 80px);
+    gap: 6px; justify-content: center; margin: 20px auto;
+  }
+  .ttt-cell {
+    background: #F1EFE8; border: 2px solid #D3D1C7; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px; font-weight: 700; cursor: pointer; transition: all 0.15s;
+    user-select: none;
+  }
+  .ttt-cell:hover:empty { background: white; border-color: #185FA5; transform: scale(1.05); }
+  .ttt-cell.x { color: #185FA5; }
+  .ttt-cell.o { color: #A32D2D; }
+  .ttt-cell.winning-cell { background: #EAF3DE; border-color: #639922; animation: winPulse 0.5s; }
+  @keyframes winPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+
+  /* RESULTS */
+  .results { text-align: center; padding: 40px 20px; }
+  .results h1 { font-size: 40px; margin-bottom: 16px; }
+  .result-badge {
+    display: inline-block; padding: 8px 20px; border-radius: 20px;
+    font-size: 14px; font-weight: 700; margin-bottom: 24px;
+  }
+  .result-badge.completed { background: #EAF3DE; color: #27500A; }
+  .result-badge.timeout { background: #FCEBEB; color: #791F1F; }
+  .result-stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px; max-width: 700px; margin: 0 auto 32px;
+  }
+  .result-stat { background: #F1EFE8; padding: 20px; border-radius: 12px; }
+  .result-stat .label { font-size: 12px; color: #5F5E5A; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .result-stat .value { font-size: 32px; font-weight: 700; color: #0C447C; }
+  .game-breakdown {
+    background: white; border: 1px solid #E5E3DD; border-radius: 12px;
+    padding: 20px; max-width: 600px; margin: 0 auto 24px; text-align: left;
+  }
+  .game-breakdown h3 { font-size: 15px; color: #0C447C; margin-bottom: 12px; }
+  .breakdown-row {
+    display: flex; justify-content: space-between; padding: 8px 0;
+    border-bottom: 1px solid #F1EFE8; font-size: 14px;
+  }
+  .breakdown-row:last-child { border-bottom: none; }
+  .breakdown-row .status {
+    font-weight: 600;
+  }
+  .breakdown-row .status.solved { color: #27500A; }
+  .breakdown-row .status.skipped { color: #854F0B; }
+  .breakdown-row .status.missed { color: #791F1F; }
+  .action-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 24px; }
+
+  /* ADMIN */
+  .admin-tabs { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 2px solid #E5E3DD; }
+  .admin-tab {
+    padding: 12px 20px; background: transparent; border: none; cursor: pointer;
+    font-size: 14px; font-weight: 600; color: #888780; border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+  }
+  .admin-tab.active { color: #185FA5; border-bottom-color: #185FA5; }
+  .data-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .data-table th {
+    background: #F1EFE8; padding: 12px 14px; text-align: left;
+    font-weight: 700; color: #0C447C; font-size: 13px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .data-table td { padding: 12px 14px; border-bottom: 1px solid #E5E3DD; }
+  .data-table tr:hover { background: #FAFAF8; }
+  .status-badge {
+    display: inline-block; padding: 4px 10px; border-radius: 12px;
+    font-size: 12px; font-weight: 600;
+  }
+  .status-badge.completed { background: #EAF3DE; color: #27500A; }
+  .status-badge.timeout { background: #FCEBEB; color: #791F1F; }
+  .status-badge.progress { background: #FAEEDA; color: #854F0B; }
+  .status-badge.expired { background: #E5E3DD; color: #444441; }
+  .empty-state { text-align: center; padding: 60px 20px; color: #888780; }
+  .rank-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 50%; font-weight: 700;
+    background: #F1EFE8; color: #444441;
+  }
+  .rank-badge.gold { background: #FAC775; color: #412402; }
+  .rank-badge.silver { background: #D3D1C7; color: #2C2C2A; }
+  .rank-badge.bronze { background: #F0997B; color: #4A1B0C; }
+
+  .admin-link {
+    position: fixed; bottom: 20px; right: 20px; background: rgba(255,255,255,0.95);
+    padding: 8px 14px; border-radius: 20px; font-size: 12px; color: #185FA5;
+    font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border: none; cursor: pointer;
+  }
+  .admin-link:hover { background: white; }
+
+  /* ADMIN MODAL */
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.6); display: flex;
+    align-items: center; justify-content: center;
+    z-index: 1000; padding: 20px;
+  }
+  .modal-box {
+    background: white; border-radius: 16px; padding: 28px;
+    max-width: 380px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .modal-box h2 { font-size: 20px; color: #0C447C; margin-bottom: 8px; }
+  .modal-box p { font-size: 13px; color: #5F5E5A; margin-bottom: 18px; }
+  .modal-box input {
+    width: 100%; padding: 12px 14px; font-size: 15px;
+    border: 2px solid #D3D1C7; border-radius: 8px; background: white;
+    font-family: inherit; margin-bottom: 12px;
+  }
+  .modal-box input:focus { outline: none; border-color: #185FA5; }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+  .modal-err { color: #A32D2D; font-size: 13px; margin-bottom: 10px; display: none; }
+
+  @media (max-width: 600px) {
+    body { padding: 10px; }
+    .container { padding: 16px; border-radius: 12px; }
+    .game-header { flex-direction: column; align-items: stretch; padding-bottom: 12px; margin-bottom: 14px; }
+    .game-stats { justify-content: space-between; }
+    h1 { font-size: 22px; }
+    .start-screen h1 { font-size: 26px; }
+    .start-screen { padding: 20px 10px; }
+    .rules-box { padding: 16px; margin: 20px auto; }
+    .rules-box ul { padding-left: 18px; font-size: 13px; line-height: 1.6; }
+    .start-btn { padding: 16px 32px; font-size: 16px; width: 100%; max-width: 300px; }
+    .login-box { margin: 20px auto; }
+    .login-box h1 { font-size: 24px; }
+
+    /* Spot the difference - keep side by side but smaller */
+    .spot-wrap { gap: 6px; }
+    .spot-img { border-width: 2px; }
+    .spot-label { font-size: 10px; padding: 3px 7px; top: 4px; left: 4px; }
+    .spot-marker { width: 26px; height: 26px; }
+
+    /* Jumble - smaller tiles */
+    .match-grid { grid-template-columns: 1fr; gap: 12px; }
+    .match-item { padding: 12px 14px; font-size: 13px; }
+    .letter-tile, .slot { width: 38px; height: 38px; font-size: 17px; }
+    .jumble-tiles, .answer-slots { gap: 6px; }
+    .hint-box { padding: 12px 14px; font-size: 13px; }
+
+    /* Maze - touch-friendly, scrollable if needed */
+    .maze-wrap { padding: 10px; overflow-x: auto; }
+    .maze-cell { width: 22px; height: 22px; font-size: 12px; }
+    .maze-controls { grid-template-columns: repeat(3, 64px); gap: 8px; }
+    .maze-btn { width: 64px; height: 64px; font-size: 26px; }
+
+    /* TTT - bigger touch targets */
+    .ttt-board { grid-template-columns: repeat(3, 80px); grid-template-rows: repeat(3, 80px); }
+    .ttt-cell { font-size: 38px; }
+    .mode-btn { padding: 10px 14px; font-size: 13px; flex: 1; }
+    .ttt-mode { display: flex; }
+
+    /* Results */
+    .results { padding: 20px 10px; }
+    .results h1 { font-size: 28px; }
+    .result-stat { padding: 14px; }
+    .result-stat .value { font-size: 26px; }
+    .game-breakdown { padding: 16px; }
+
+    /* Admin */
+    .data-table { font-size: 12px; }
+    .data-table th, .data-table td { padding: 8px 6px; }
+    .admin-tabs { overflow-x: auto; }
+    .admin-tab { padding: 10px 14px; font-size: 13px; white-space: nowrap; }
+
+    .admin-link { bottom: 10px; right: 10px; padding: 8px 12px; font-size: 11px; }
+
+    /* Buttons */
+    .btn-primary, .btn-secondary, .btn-warn { padding: 12px 18px; font-size: 14px; }
+    .game-actions { flex-direction: column; gap: 8px; }
+    .game-actions button { width: 100%; }
+
+    /* Modals */
+    .modal-box { padding: 20px; }
+    .modal-box h2 { font-size: 18px; }
+  }
+
+  @media (max-width: 380px) {
+    .ttt-board { grid-template-columns: repeat(3, 70px); grid-template-rows: repeat(3, 70px); }
+    .ttt-cell { font-size: 32px; }
+    .maze-cell { width: 19px; height: 19px; font-size: 11px; }
+    .letter-tile, .slot { width: 34px; height: 34px; font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div id="app"></div>
+</div>
+<button class="admin-link" id="adminBtn">🔐 Admin</button>
+
+<script>
+(function() {
+  const app = document.getElementById('app');
+  const adminBtn = document.getElementById('adminBtn');
+  const STORAGE_KEY = 'hospitalGameData';
+  const TOTAL_TIME = 120;
+
+  let currentPlayer = null;
+  let gameState = null;
+  let sessionCheckInterval = null;
+
+  // Session expiry: auto-logout after 5 minutes
+  function isSessionExpired() {
+    return currentPlayer && currentPlayer.sessionExpiresAt && Date.now() > currentPlayer.sessionExpiresAt;
+  }
+
+  function startSessionMonitor() {
+    if (sessionCheckInterval) clearInterval(sessionCheckInterval);
+    sessionCheckInterval = setInterval(() => {
+      if (isSessionExpired()) {
+        clearInterval(sessionCheckInterval);
+        sessionCheckInterval = null;
+        if (gameState && gameState.timerInterval) clearInterval(gameState.timerInterval);
+        document.removeEventListener('keydown', handleMazeKey);
+        showSessionExpiredModal();
+      }
+    }, 1000);
+  }
+
+  function showSessionExpiredModal() {
+    const existing = document.getElementById('expiredModal');
+    if (existing) existing.remove();
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.id = 'expiredModal';
+    modal.innerHTML = `
+      <div class="modal-box" style="text-align:center;">
+        <div style="font-size:48px;margin-bottom:12px;">⏱️</div>
+        <h2 style="color:#A32D2D;">Session Expired</h2>
+        <p>Your session has expired. Each Employee ID is valid for only 5 minutes after login.</p>
+        <p style="margin-top:8px;">Please log in again to play.</p>
+        <div class="modal-actions" style="justify-content:center;margin-top:16px;">
+          <button class="btn-primary" style="width:auto;margin-top:0;" id="expiredOk">Return to Login</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    document.getElementById('expiredOk').addEventListener('click', () => {
+      modal.remove();
+      // Save final state if in progress
+      if (currentPlayer && currentPlayer.status === 'In Progress') {
+        currentPlayer.status = 'Session Expired';
+        currentPlayer.timeTaken = gameState ? (TOTAL_TIME - gameState.timeRemaining) : 0;
+        currentPlayer.gamesCompleted = gameState ? gameState.gamesCompleted : 0;
+        currentPlayer.breakdown = gameState ? gameState.breakdown : currentPlayer.breakdown;
+        currentPlayer.finishedAt = new Date().toISOString();
+        savePlayer(currentPlayer);
+      }
+      currentPlayer = null;
+      gameState = null;
+      renderLogin();
+    });
+  }
+
+  // ======== GAME 1: SPOT THE DIFFERENCE (Hospital) ========
+  const SPOT_LEVELS = [
+    {
+      name: "Hospital Room",
+      sceneA: `<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%;display:block;">
+        <rect width="100" height="60" fill="#E6F1FB"/>
+        <rect y="60" width="100" height="40" fill="#D3D1C7"/>
+        <!-- bed -->
+        <rect x="15" y="55" width="45" height="20" fill="white" stroke="#888780" stroke-width="0.5"/>
+        <rect x="15" y="55" width="45" height="5" fill="#B5D4F4"/>
+        <rect x="15" y="72" width="45" height="3" fill="#5F5E5A"/>
+        <!-- pillow -->
+        <rect x="18" y="57" width="15" height="8" rx="2" fill="#F4C0D1"/>
+        <!-- patient head -->
+        <circle cx="25" cy="61" r="3" fill="#F5C4B3"/>
+        <!-- blanket BLUE -->
+        <rect x="35" y="63" width="23" height="10" fill="#378ADD"/>
+        <!-- IV stand -->
+        <rect x="8" y="30" width="1.5" height="45" fill="#888780"/>
+        <rect x="5" y="32" width="8" height="12" rx="1" fill="white" stroke="#888780" stroke-width="0.5"/>
+        <rect x="6" y="36" width="6" height="6" fill="#85B7EB" opacity="0.7"/>
+        <!-- window WITH HORIZONTAL DIVIDER -->
+        <rect x="65" y="15" width="25" height="25" fill="#85B7EB"/>
+        <line x1="77.5" y1="15" x2="77.5" y2="40" stroke="white" stroke-width="0.8"/>
+        <line x1="65" y1="27.5" x2="90" y2="27.5" stroke="white" stroke-width="0.8"/>
+        <!-- clock -->
+        <circle cx="50" cy="25" r="6" fill="white" stroke="#2C2C2A" stroke-width="0.8"/>
+        <line x1="50" y1="25" x2="50" y2="21" stroke="#2C2C2A" stroke-width="0.8"/>
+        <line x1="50" y1="25" x2="53" y2="25" stroke="#2C2C2A" stroke-width="0.8"/>
+        <!-- heart monitor GREEN line -->
+        <rect x="70" y="55" width="18" height="13" fill="#2C2C2A"/>
+        <path d="M71,62 L74,62 L75,58 L77,66 L79,60 L88,60" stroke="#97C459" stroke-width="0.8" fill="none"/>
+        <!-- plant WITH FLOWER on top -->
+        <rect x="30" y="82" width="6" height="6" fill="#712B13"/>
+        <circle cx="33" cy="80" r="4" fill="#3B6D11"/>
+        <circle cx="33" cy="78" r="1.5" fill="#E24B4A"/>
+        <!-- red cross -->
+        <rect x="20" y="20" width="8" height="8" fill="white" stroke="#A32D2D" stroke-width="0.8"/>
+        <rect x="23" y="21" width="2" height="6" fill="#A32D2D"/>
+        <rect x="21" y="23" width="6" height="2" fill="#A32D2D"/>
+      </svg>`,
+      sceneB: `<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%;display:block;">
+        <rect width="100" height="60" fill="#E6F1FB"/>
+        <rect y="60" width="100" height="40" fill="#D3D1C7"/>
+        <rect x="15" y="55" width="45" height="20" fill="white" stroke="#888780" stroke-width="0.5"/>
+        <rect x="15" y="55" width="45" height="5" fill="#B5D4F4"/>
+        <rect x="15" y="72" width="45" height="3" fill="#5F5E5A"/>
+        <rect x="18" y="57" width="15" height="8" rx="2" fill="#F4C0D1"/>
+        <circle cx="25" cy="61" r="3" fill="#F5C4B3"/>
+        <!-- blanket RED (diff 1) -->
+        <rect x="35" y="63" width="23" height="10" fill="#E24B4A"/>
+        <rect x="8" y="30" width="1.5" height="45" fill="#888780"/>
+        <rect x="5" y="32" width="8" height="12" rx="1" fill="white" stroke="#888780" stroke-width="0.5"/>
+        <rect x="6" y="36" width="6" height="6" fill="#85B7EB" opacity="0.7"/>
+        <!-- window MISSING horizontal divider (diff 2) -->
+        <rect x="65" y="15" width="25" height="25" fill="#85B7EB"/>
+        <line x1="77.5" y1="15" x2="77.5" y2="40" stroke="white" stroke-width="0.8"/>
+        <circle cx="50" cy="25" r="6" fill="white" stroke="#2C2C2A" stroke-width="0.8"/>
+        <line x1="50" y1="25" x2="50" y2="21" stroke="#2C2C2A" stroke-width="0.8"/>
+        <line x1="50" y1="25" x2="53" y2="25" stroke="#2C2C2A" stroke-width="0.8"/>
+        <!-- heart monitor RED line (diff 3) -->
+        <rect x="70" y="55" width="18" height="13" fill="#2C2C2A"/>
+        <path d="M71,62 L74,62 L75,58 L77,66 L79,60 L88,60" stroke="#E24B4A" stroke-width="0.8" fill="none"/>
+        <!-- plant WITHOUT flower (diff 4) -->
+        <rect x="30" y="82" width="6" height="6" fill="#712B13"/>
+        <circle cx="33" cy="80" r="4" fill="#3B6D11"/>
+        <rect x="20" y="20" width="8" height="8" fill="white" stroke="#A32D2D" stroke-width="0.8"/>
+        <rect x="23" y="21" width="2" height="6" fill="#A32D2D"/>
+        <rect x="21" y="23" width="6" height="2" fill="#A32D2D"/>
+        <!-- extra yellow circle on floor (diff 5) -->
+        <circle cx="75" cy="85" r="2.5" fill="#FAC775"/>
+      </svg>`,
+      diffs: [
+        { x: 46, y: 68 },   // 1. blanket color (blue → red)
+        { x: 79, y: 62 },   // 2. monitor line color (green → red)
+        { x: 77, y: 28 },   // 3. window missing horizontal divider
+        { x: 33, y: 78 },   // 4. plant missing red flower
+        { x: 75, y: 85 }    // 5. extra yellow circle on floor
+      ]
+    },
+    {
+      name: "Doctor's Office",
+      sceneA: `<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%;display:block;">
+        <rect width="100" height="55" fill="#FAEEDA"/>
+        <rect y="55" width="100" height="45" fill="#B4B2A9"/>
+        <!-- desk -->
+        <rect x="15" y="60" width="55" height="25" fill="#712B13"/>
+        <rect x="15" y="60" width="55" height="3" fill="#854F0B"/>
+        <!-- doctor -->
+        <rect x="72" y="45" width="16" height="25" fill="white"/>
+        <circle cx="80" cy="40" r="6" fill="#F5C4B3"/>
+        <rect x="75" y="44" width="10" height="2" fill="#2C2C2A"/>
+        <!-- stethoscope -->
+        <circle cx="80" cy="55" r="2" fill="#2C2C2A"/>
+        <path d="M80,50 Q76,54 78,58" stroke="#2C2C2A" stroke-width="0.8" fill="none"/>
+        <path d="M80,50 Q84,54 82,58" stroke="#2C2C2A" stroke-width="0.8" fill="none"/>
+        <!-- laptop -->
+        <rect x="25" y="55" width="15" height="8" fill="#5F5E5A"/>
+        <rect x="26" y="56" width="13" height="6" fill="#85B7EB"/>
+        <!-- papers -->
+        <rect x="45" y="58" width="10" height="6" fill="white" stroke="#888780" stroke-width="0.3"/>
+        <line x1="47" y1="60" x2="53" y2="60" stroke="#888780" stroke-width="0.3"/>
+        <line x1="47" y1="62" x2="52" y2="62" stroke="#888780" stroke-width="0.3"/>
+        <!-- coffee mug -->
+        <rect x="60" y="55" width="6" height="7" fill="#E24B4A"/>
+        <path d="M66,57 Q68,58 66,60" stroke="#E24B4A" stroke-width="0.8" fill="none"/>
+        <!-- chair back -->
+        <rect x="74" y="70" width="12" height="15" fill="#2C2C2A"/>
+        <!-- wall clock -->
+        <circle cx="20" cy="20" r="7" fill="white" stroke="#444441" stroke-width="0.8"/>
+        <line x1="20" y1="20" x2="20" y2="15" stroke="#444441" stroke-width="0.8"/>
+        <line x1="20" y1="20" x2="24" y2="20" stroke="#444441" stroke-width="0.8"/>
+        <!-- certificate -->
+        <rect x="45" y="15" width="15" height="20" fill="white" stroke="#BA7517" stroke-width="0.8"/>
+        <line x1="47" y1="22" x2="58" y2="22" stroke="#888780" stroke-width="0.4"/>
+        <line x1="47" y1="25" x2="58" y2="25" stroke="#888780" stroke-width="0.4"/>
+        <line x1="47" y1="28" x2="56" y2="28" stroke="#888780" stroke-width="0.4"/>
+        <!-- plant -->
+        <rect x="83" y="80" width="8" height="8" fill="#712B13"/>
+        <circle cx="87" cy="78" r="5" fill="#3B6D11"/>
+      </svg>`,
+      sceneB: `<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%;display:block;">
+        <rect width="100" height="55" fill="#FAEEDA"/>
+        <rect y="55" width="100" height="45" fill="#B4B2A9"/>
+        <rect x="15" y="60" width="55" height="25" fill="#712B13"/>
+        <rect x="15" y="60" width="55" height="3" fill="#854F0B"/>
+        <rect x="72" y="45" width="16" height="25" fill="white"/>
+        <circle cx="80" cy="40" r="6" fill="#F5C4B3"/>
+        <circle cx="80" cy="55" r="2" fill="#2C2C2A"/>
+        <path d="M80,50 Q76,54 78,58" stroke="#2C2C2A" stroke-width="0.8" fill="none"/>
+        <path d="M80,50 Q84,54 82,58" stroke="#2C2C2A" stroke-width="0.8" fill="none"/>
+        <rect x="25" y="55" width="15" height="8" fill="#5F5E5A"/>
+        <rect x="26" y="56" width="13" height="6" fill="#85B7EB"/>
+        <rect x="45" y="58" width="10" height="6" fill="white" stroke="#888780" stroke-width="0.3"/>
+        <line x1="47" y1="60" x2="53" y2="60" stroke="#888780" stroke-width="0.3"/>
+        <line x1="47" y1="62" x2="52" y2="62" stroke="#888780" stroke-width="0.3"/>
+        <rect x="60" y="55" width="6" height="7" fill="#378ADD"/>
+        <path d="M66,57 Q68,58 66,60" stroke="#378ADD" stroke-width="0.8" fill="none"/>
+        <rect x="74" y="70" width="12" height="15" fill="#2C2C2A"/>
+        <circle cx="20" cy="20" r="7" fill="white" stroke="#444441" stroke-width="0.8"/>
+        <line x1="20" y1="20" x2="20" y2="15" stroke="#444441" stroke-width="0.8"/>
+        <line x1="20" y1="20" x2="24" y2="20" stroke="#444441" stroke-width="0.8"/>
+        <circle cx="20" cy="20" r="0.8" fill="#E24B4A"/>
+        <rect x="45" y="15" width="15" height="20" fill="white" stroke="#BA7517" stroke-width="0.8"/>
+        <line x1="47" y1="22" x2="58" y2="22" stroke="#888780" stroke-width="0.4"/>
+        <line x1="47" y1="25" x2="58" y2="25" stroke="#888780" stroke-width="0.4"/>
+        <rect x="83" y="80" width="8" height="8" fill="#712B13"/>
+        <circle cx="87" cy="78" r="5" fill="#0F6E56"/>
+      </svg>`,
+      diffs: [
+        { x: 80, y: 45 },    // missing mask on doctor
+        { x: 63, y: 58 },    // coffee mug color (red → blue)
+        { x: 20, y: 20 },    // red dot added on clock
+        { x: 52, y: 28 },    // certificate missing 3rd line
+        { x: 87, y: 78 }     // plant color (green → dark green)
+      ]
+    },
+    {
+      name: "Emergency Room",
+      sceneA: `<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%;display:block;">
+        <rect width="100" height="60" fill="#FAEEDA"/>
+        <rect y="60" width="100" height="40" fill="#D3D1C7"/>
+        <rect x="20" y="55" width="50" height="15" fill="white" stroke="#888780" stroke-width="0.5"/>
+        <rect x="20" y="55" width="50" height="3" fill="#85B7EB"/>
+        <rect x="22" y="68" width="3" height="12" fill="#5F5E5A"/>
+        <rect x="65" y="68" width="3" height="12" fill="#5F5E5A"/>
+        <circle cx="23.5" cy="82" r="2" fill="#2C2C2A"/>
+        <circle cx="66.5" cy="82" r="2" fill="#2C2C2A"/>
+        <circle cx="28" cy="58" r="3" fill="#F5C4B3"/>
+        <!-- gown GREEN -->
+        <rect x="32" y="56" width="25" height="8" fill="#97C459"/>
+        <!-- EXIT sign GREEN -->
+        <rect x="75" y="10" width="20" height="10" fill="#3B6D11"/>
+        <text x="85" y="17" font-size="5" fill="white" text-anchor="middle" font-weight="bold">EXIT</text>
+        <!-- defibrillator with TWO white buttons -->
+        <rect x="5" y="30" width="15" height="20" fill="#E24B4A"/>
+        <rect x="7" y="32" width="11" height="8" fill="#2C2C2A"/>
+        <path d="M8,36 L11,36 L12,33 L14,39 L16,36 L17,36" stroke="#97C459" stroke-width="0.6" fill="none"/>
+        <circle cx="10" cy="45" r="1.5" fill="white"/>
+        <circle cx="15" cy="45" r="1.5" fill="white"/>
+        <!-- oxygen tank BLUE -->
+        <rect x="45" y="75" width="6" height="15" rx="2" fill="#378ADD"/>
+        <rect x="46" y="73" width="4" height="3" fill="#888780"/>
+        <!-- syringe on tray -->
+        <rect x="75" y="55" width="15" height="5" fill="white" stroke="#888780" stroke-width="0.4"/>
+        <rect x="77" y="57" width="10" height="1.5" fill="#85B7EB"/>
+        <circle cx="77" cy="57.8" r="0.8" fill="#2C2C2A"/>
+        <!-- red cross on wall -->
+        <rect x="40" y="25" width="10" height="10" fill="white" stroke="#A32D2D" stroke-width="0.5"/>
+        <rect x="44" y="26" width="2" height="8" fill="#A32D2D"/>
+        <rect x="41" y="29" width="8" height="2" fill="#A32D2D"/>
+      </svg>`,
+      sceneB: `<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%;display:block;">
+        <rect width="100" height="60" fill="#FAEEDA"/>
+        <rect y="60" width="100" height="40" fill="#D3D1C7"/>
+        <rect x="20" y="55" width="50" height="15" fill="white" stroke="#888780" stroke-width="0.5"/>
+        <rect x="20" y="55" width="50" height="3" fill="#85B7EB"/>
+        <rect x="22" y="68" width="3" height="12" fill="#5F5E5A"/>
+        <rect x="65" y="68" width="3" height="12" fill="#5F5E5A"/>
+        <circle cx="23.5" cy="82" r="2" fill="#2C2C2A"/>
+        <circle cx="66.5" cy="82" r="2" fill="#2C2C2A"/>
+        <circle cx="28" cy="58" r="3" fill="#F5C4B3"/>
+        <!-- gown BLUE (diff 1) -->
+        <rect x="32" y="56" width="25" height="8" fill="#378ADD"/>
+        <!-- EXIT sign RED (diff 2) -->
+        <rect x="75" y="10" width="20" height="10" fill="#A32D2D"/>
+        <text x="85" y="17" font-size="5" fill="white" text-anchor="middle" font-weight="bold">EXIT</text>
+        <rect x="5" y="30" width="15" height="20" fill="#E24B4A"/>
+        <rect x="7" y="32" width="11" height="8" fill="#2C2C2A"/>
+        <path d="M8,36 L11,36 L12,33 L14,39 L16,36 L17,36" stroke="#97C459" stroke-width="0.6" fill="none"/>
+        <circle cx="10" cy="45" r="1.5" fill="white"/>
+        <!-- missing 2nd white button (diff 3) -->
+        <!-- oxygen tank GREEN (diff 4) -->
+        <rect x="45" y="75" width="6" height="15" rx="2" fill="#0F6E56"/>
+        <rect x="46" y="73" width="4" height="3" fill="#888780"/>
+        <rect x="75" y="55" width="15" height="5" fill="white" stroke="#888780" stroke-width="0.4"/>
+        <rect x="77" y="57" width="10" height="1.5" fill="#85B7EB"/>
+        <circle cx="77" cy="57.8" r="0.8" fill="#2C2C2A"/>
+        <rect x="40" y="25" width="10" height="10" fill="white" stroke="#A32D2D" stroke-width="0.5"/>
+        <rect x="44" y="26" width="2" height="8" fill="#A32D2D"/>
+        <rect x="41" y="29" width="8" height="2" fill="#A32D2D"/>
+        <!-- extra yellow circle on floor (diff 5) -->
+        <circle cx="85" cy="70" r="3" fill="#FAC775"/>
+      </svg>`,
+      diffs: [
+        { x: 44, y: 60 },   // 1. gown color (green → blue)
+        { x: 85, y: 15 },   // 2. exit sign color (green → red)
+        { x: 15, y: 45 },   // 3. missing second white button on defib
+        { x: 48, y: 82 },   // 4. oxygen tank color (blue → dark green)
+        { x: 85, y: 70 }    // 5. extra yellow circle on floor
+      ]
+    },
+    {
+      name: "Pharmacy Counter",
+      sceneA: `<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%;display:block;">
+        <rect width="100" height="55" fill="#E1F5EE"/>
+        <rect y="55" width="100" height="45" fill="#5DCAA5"/>
+        <!-- counter -->
+        <rect x="0" y="65" width="100" height="20" fill="white"/>
+        <rect x="0" y="65" width="100" height="3" fill="#D3D1C7"/>
+        <!-- shelf -->
+        <rect x="10" y="15" width="80" height="3" fill="#712B13"/>
+        <rect x="10" y="35" width="80" height="3" fill="#712B13"/>
+        <!-- pill bottles top shelf -->
+        <rect x="15" y="7" width="6" height="8" fill="#E24B4A"/>
+        <rect x="15" y="6" width="6" height="2" fill="white"/>
+        <rect x="25" y="7" width="6" height="8" fill="#378ADD"/>
+        <rect x="25" y="6" width="6" height="2" fill="white"/>
+        <rect x="35" y="7" width="6" height="8" fill="#FAC775"/>
+        <rect x="35" y="6" width="6" height="2" fill="white"/>
+        <rect x="45" y="7" width="6" height="8" fill="#97C459"/>
+        <rect x="45" y="6" width="6" height="2" fill="white"/>
+        <rect x="55" y="7" width="6" height="8" fill="#7F77DD"/>
+        <rect x="55" y="6" width="6" height="2" fill="white"/>
+        <!-- middle shelf -->
+        <rect x="15" y="25" width="10" height="10" fill="white" stroke="#A32D2D" stroke-width="0.5"/>
+        <rect x="19" y="26" width="2" height="8" fill="#A32D2D"/>
+        <rect x="16" y="29" width="8" height="2" fill="#A32D2D"/>
+        <rect x="30" y="27" width="12" height="8" fill="#EF9F27"/>
+        <rect x="30" y="27" width="12" height="2" fill="#854F0B"/>
+        <rect x="48" y="25" width="15" height="10" fill="#B5D4F4"/>
+        <circle cx="55.5" cy="30" r="2" fill="#185FA5"/>
+        <rect x="70" y="28" width="8" height="7" fill="#E24B4A"/>
+        <!-- counter items -->
+        <rect x="20" y="58" width="20" height="7" fill="white" stroke="#888780" stroke-width="0.3"/>
+        <line x1="22" y1="60" x2="38" y2="60" stroke="#888780" stroke-width="0.3"/>
+        <line x1="22" y1="62" x2="35" y2="62" stroke="#888780" stroke-width="0.3"/>
+        <!-- weighing scale -->
+        <rect x="55" y="55" width="15" height="10" fill="#5F5E5A"/>
+        <rect x="58" y="57" width="9" height="4" fill="#97C459"/>
+        <!-- Rx sign -->
+        <text x="85" y="45" font-size="10" fill="#185FA5" font-weight="bold">Rx</text>
+      </svg>`,
+      sceneB: `<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%;display:block;">
+        <rect width="100" height="55" fill="#E1F5EE"/>
+        <rect y="55" width="100" height="45" fill="#5DCAA5"/>
+        <rect x="0" y="65" width="100" height="20" fill="white"/>
+        <rect x="0" y="65" width="100" height="3" fill="#D3D1C7"/>
+        <rect x="10" y="15" width="80" height="3" fill="#712B13"/>
+        <rect x="10" y="35" width="80" height="3" fill="#712B13"/>
+        <rect x="15" y="7" width="6" height="8" fill="#E24B4A"/>
+        <rect x="15" y="6" width="6" height="2" fill="#FAC775"/>
+        <rect x="25" y="7" width="6" height="8" fill="#378ADD"/>
+        <rect x="25" y="6" width="6" height="2" fill="white"/>
+        <rect x="35" y="7" width="6" height="8" fill="#FAC775"/>
+        <rect x="35" y="6" width="6" height="2" fill="white"/>
+        <rect x="45" y="7" width="6" height="8" fill="#F4C0D1"/>
+        <rect x="45" y="6" width="6" height="2" fill="white"/>
+        <rect x="55" y="7" width="6" height="8" fill="#7F77DD"/>
+        <rect x="55" y="6" width="6" height="2" fill="white"/>
+        <rect x="65" y="7" width="6" height="8" fill="#639922"/>
+        <rect x="65" y="6" width="6" height="2" fill="white"/>
+        <rect x="15" y="25" width="10" height="10" fill="white" stroke="#A32D2D" stroke-width="0.5"/>
+        <rect x="19" y="26" width="2" height="8" fill="#A32D2D"/>
+        <rect x="16" y="29" width="8" height="2" fill="#A32D2D"/>
+        <rect x="30" y="27" width="12" height="8" fill="#EF9F27"/>
+        <rect x="30" y="27" width="12" height="2" fill="#854F0B"/>
+        <rect x="48" y="25" width="15" height="10" fill="#B5D4F4"/>
+        <rect x="70" y="28" width="8" height="7" fill="#E24B4A"/>
+        <rect x="20" y="58" width="20" height="7" fill="white" stroke="#888780" stroke-width="0.3"/>
+        <line x1="22" y1="60" x2="38" y2="60" stroke="#888780" stroke-width="0.3"/>
+        <line x1="22" y1="62" x2="35" y2="62" stroke="#888780" stroke-width="0.3"/>
+        <rect x="55" y="55" width="15" height="10" fill="#5F5E5A"/>
+        <rect x="58" y="57" width="9" height="4" fill="#E24B4A"/>
+        <text x="85" y="45" font-size="10" fill="#185FA5" font-weight="bold">Rx</text>
+      </svg>`,
+      diffs: [
+        { x: 18, y: 7 },    // 1. 1st bottle cap color (white → yellow)
+        { x: 48, y: 11 },   // 2. 4th bottle color (green → pink)
+        { x: 68, y: 11 },   // 3. extra 6th bottle added (green)
+        { x: 55, y: 30 },   // 4. missing blue dot on box
+        { x: 62, y: 59 }    // 5. scale display color (green → red)
+      ]
+    },
+    {
+      name: "Operating Theatre",
+      sceneA: `<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%;display:block;">
+        <rect width="100" height="60" fill="#B5D4F4"/>
+        <rect y="60" width="100" height="40" fill="#888780"/>
+        <!-- operating table -->
+        <rect x="20" y="60" width="55" height="10" fill="white" stroke="#5F5E5A" stroke-width="0.5"/>
+        <rect x="22" y="70" width="3" height="15" fill="#444441"/>
+        <rect x="70" y="70" width="3" height="15" fill="#444441"/>
+        <!-- patient covered -->
+        <rect x="25" y="55" width="45" height="5" fill="#85B7EB"/>
+        <!-- surgical lamp -->
+        <circle cx="48" cy="20" r="10" fill="#FAC775"/>
+        <circle cx="48" cy="20" r="8" fill="#FAEEDA"/>
+        <rect x="47" y="10" width="2" height="5" fill="#444441"/>
+        <!-- surgeon -->
+        <rect x="5" y="40" width="14" height="25" fill="#0F6E56"/>
+        <circle cx="12" cy="35" r="5" fill="#F5C4B3"/>
+        <rect x="8" y="34" width="8" height="3" fill="#0F6E56"/>
+        <!-- mask -->
+        <rect x="9" y="37" width="6" height="3" fill="white"/>
+        <!-- gloves -->
+        <circle cx="4" cy="55" r="2" fill="#B5D4F4"/>
+        <circle cx="20" cy="55" r="2" fill="#B5D4F4"/>
+        <!-- tools tray -->
+        <rect x="78" y="55" width="18" height="8" fill="#D3D1C7"/>
+        <line x1="80" y1="57" x2="84" y2="61" stroke="#2C2C2A" stroke-width="0.5"/>
+        <line x1="86" y1="57" x2="90" y2="61" stroke="#2C2C2A" stroke-width="0.5"/>
+        <rect x="92" y="57" width="3" height="4" fill="#E24B4A"/>
+        <!-- monitor -->
+        <rect x="78" y="30" width="18" height="15" fill="#2C2C2A"/>
+        <rect x="80" y="32" width="14" height="10" fill="#0F6E56"/>
+        <path d="M81,37 L84,37 L85,34 L87,40 L89,37 L93,37" stroke="#97C459" stroke-width="0.6" fill="none"/>
+        <text x="87" y="44" font-size="2.5" fill="white">72</text>
+        <!-- cross on wall -->
+        <rect x="78" y="10" width="12" height="12" fill="white" stroke="#A32D2D" stroke-width="0.5"/>
+        <rect x="83" y="11" width="2" height="10" fill="#A32D2D"/>
+        <rect x="79" y="15" width="10" height="2" fill="#A32D2D"/>
+      </svg>`,
+      sceneB: `<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%;display:block;">
+        <rect width="100" height="60" fill="#B5D4F4"/>
+        <rect y="60" width="100" height="40" fill="#888780"/>
+        <rect x="20" y="60" width="55" height="10" fill="white" stroke="#5F5E5A" stroke-width="0.5"/>
+        <rect x="22" y="70" width="3" height="15" fill="#444441"/>
+        <rect x="70" y="70" width="3" height="15" fill="#444441"/>
+        <rect x="25" y="55" width="45" height="5" fill="#97C459"/>
+        <circle cx="48" cy="20" r="10" fill="#FAC775"/>
+        <circle cx="48" cy="20" r="8" fill="#FAEEDA"/>
+        <rect x="47" y="10" width="2" height="5" fill="#444441"/>
+        <rect x="5" y="40" width="14" height="25" fill="#378ADD"/>
+        <circle cx="12" cy="35" r="5" fill="#F5C4B3"/>
+        <rect x="8" y="34" width="8" height="3" fill="#378ADD"/>
+        <rect x="9" y="37" width="6" height="3" fill="white"/>
+        <circle cx="4" cy="55" r="2" fill="#B5D4F4"/>
+        <circle cx="20" cy="55" r="2" fill="#B5D4F4"/>
+        <rect x="78" y="55" width="18" height="8" fill="#D3D1C7"/>
+        <line x1="80" y1="57" x2="84" y2="61" stroke="#2C2C2A" stroke-width="0.5"/>
+        <line x1="86" y1="57" x2="90" y2="61" stroke="#2C2C2A" stroke-width="0.5"/>
+        <rect x="78" y="30" width="18" height="15" fill="#2C2C2A"/>
+        <rect x="80" y="32" width="14" height="10" fill="#0F6E56"/>
+        <path d="M81,37 L84,37 L85,34 L87,40 L89,37 L93,37" stroke="#97C459" stroke-width="0.6" fill="none"/>
+        <text x="87" y="44" font-size="2.5" fill="white">85</text>
+        <rect x="78" y="10" width="12" height="12" fill="white" stroke="#A32D2D" stroke-width="0.5"/>
+        <rect x="83" y="11" width="2" height="10" fill="#A32D2D"/>
+        <rect x="79" y="15" width="10" height="2" fill="#A32D2D"/>
+        <circle cx="30" cy="85" r="2" fill="#E24B4A"/>
+      </svg>`,
+      diffs: [
+        { x: 47, y: 58 },  // sheet color (blue → green)
+        { x: 12, y: 50 },  // scrubs color (green → blue)
+        { x: 93, y: 59 },  // missing red tool
+        { x: 87, y: 44 },  // monitor number (72 → 85)
+        { x: 30, y: 85 }   // extra red dot on floor
+      ]
+    }
+  ];
+
+  // ======== GAME 2: JUMBLE (Hospital words) ========
+  const JUMBLE_PUZZLES = [
+    { word: 'PHARMACIST', hint: 'A professional who prepares and dispenses medicines' },
+    { word: 'SURGERY', hint: 'A medical procedure performed with instruments in an operating theatre' },
+    { word: 'PATIENT', hint: 'A person receiving medical treatment' },
+    { word: 'VACCINE', hint: 'An injection that protects against a disease' },
+    { word: 'HOSPITAL', hint: 'A building where sick or injured people receive medical treatment' }
+  ];
+
+  // ======== GAME 3: MATCH (Hospital terms) ========
+  const MATCH_PAIRS = [
+    { word: 'Anaesthesia', meaning: 'A drug that prevents pain during surgery' },
+    { word: 'Diagnosis', meaning: 'Identification of an illness from symptoms' },
+    { word: 'Pharmacy', meaning: 'A place that dispenses medicines' },
+    { word: 'Radiology', meaning: 'Branch of medicine using X-rays and imaging' },
+    { word: 'Paediatrics', meaning: 'Medical care of infants and children' },
+    { word: 'Prescription', meaning: 'A written medical order for medicine' }
+  ];
+
+  // ======== GAME 4: MAZE (Patient to Doctor) ========
+  // 0 = path, 1 = wall, 2 = start (patient), 3 = end (doctor)
+  // Medium-hard: 13x13 with dead ends and a winding path
+  const MAZE = [
+    [2,0,0,0,1,0,0,0,0,0,1,0,0],
+    [1,1,1,0,1,0,1,1,1,0,1,0,1],
+    [0,0,1,0,0,0,1,0,0,0,0,0,1],
+    [0,1,1,1,1,1,1,0,1,1,1,1,1],
+    [0,0,0,0,0,0,0,0,1,0,0,0,0],
+    [1,1,1,0,1,1,1,1,1,0,1,1,0],
+    [0,0,1,0,0,0,1,0,0,0,1,0,0],
+    [0,1,1,1,1,0,1,0,1,1,1,0,1],
+    [0,0,0,0,1,0,0,0,0,0,0,0,1],
+    [1,1,1,0,1,1,1,1,1,1,1,0,1],
+    [0,0,1,0,0,0,0,0,0,0,1,0,0],
+    [0,1,1,1,1,1,1,1,1,0,1,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,3]
+  ];
+
+  // ======== STORAGE ========
+  function loadData() {
+    try {
+      const d = localStorage.getItem(STORAGE_KEY);
+      return d ? JSON.parse(d) : { players: [] };
+    } catch { return { players: [] }; }
+  }
+  function saveData(d) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); } catch {} }
+  function savePlayer(p) {
+    const data = loadData();
+    const i = data.players.findIndex(x => x.empId === p.empId && x.sessionId === p.sessionId);
+    if (i >= 0) data.players[i] = p; else data.players.push(p);
+    saveData(data);
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function formatTime(s) {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return `${m}:${sec.toString().padStart(2, '0')}`;
+  }
+
+  // Calculate player's rank (1-indexed) among finished players
+  function calculateRank(player) {
+    const data = loadData();
+    const finished = data.players.filter(p => p.status === 'Completed' || p.status === 'Timeout' || p.status === 'Session Expired');
+    const sorted = [...finished].sort((a, b) => {
+      const aG = a.gamesCompleted || 0, bG = b.gamesCompleted || 0;
+      if (bG !== aG) return bG - aG;
+      return (a.timeTaken || 0) - (b.timeTaken || 0);
+    });
+    const rank = sorted.findIndex(p =>
+      p.empId === player.empId && p.sessionId === player.sessionId
+    ) + 1;
+    return { rank: rank || sorted.length, total: sorted.length };
+  }
+
+  function ordinal(n) {
+    const s = ['th', 'st', 'nd', 'rd'];
+    const v = n % 100;
+    return n + (s[(v - 20) % 10] || s[v] || s[0]);
+  }
+
+  // ======== LOGIN ========
+  function renderLogin() {
+    app.innerHTML = `
+      <div class="login-box">
+        <div style="font-size: 15px; font-weight: 700; color: #185FA5; margin-bottom: 8px; letter-spacing: 0.5px; text-transform: uppercase;">Welcome to</div>
+        <h1 style="color: #0C447C; margin-bottom: 4px;">🎮 Gamethon</h1>
+        <div style="font-size: 13px; color: #5F5E5A; margin-bottom: 6px; font-weight: 500;">Indira IVF Culture Club</div>
+        <p class="subtitle" style="font-size: 15px; margin-bottom: 28px;">Your Focus Defines Your Speed—Show What You've Got!</p>
+        <div class="form-group">
+          <label for="empId">Employee ID</label>
+          <input type="text" id="empId" placeholder="e.g. EMP001" autocomplete="off" />
+        </div>
+        <div class="form-group">
+          <label for="empName">Employee Name</label>
+          <input type="text" id="empName" placeholder="Enter your full name" autocomplete="off" />
+        </div>
+        <div id="loginError" class="error-msg" style="display:none;"></div>
+        <button class="btn-primary" id="loginBtn">Continue →</button>
+      </div>
+    `;
+    const idInput = document.getElementById('empId');
+    const nameInput = document.getElementById('empName');
+    const err = document.getElementById('loginError');
+    function submit() {
+      const empId = idInput.value.trim();
+      const empName = nameInput.value.trim();
+      if (!empId || !empName) {
+        err.textContent = 'Please fill in both Employee ID and Name.';
+        err.style.display = 'block';
+        return;
+      }
+      currentPlayer = {
+        empId, empName,
+        sessionId: Date.now(),
+        status: 'In Progress',
+        gamesCompleted: 0,
+        timeTaken: 0,
+        startedAt: new Date().toISOString(),
+        sessionExpiresAt: Date.now() + (5 * 60 * 1000), // 5 minutes from login
+        breakdown: { spot: 'pending', jumble: 'pending', match: 'pending', maze: 'pending', ttt: 'pending' }
+      };
+      savePlayer(currentPlayer);
+      startSessionMonitor();
+      renderStart();
+    }
+    document.getElementById('loginBtn').addEventListener('click', submit);
+    [idInput, nameInput].forEach(inp => inp.addEventListener('keypress', e => {
+      if (e.key === 'Enter') submit();
+    }));
+  }
+
+  // ======== START SCREEN ========
+  function renderStart() {
+    const minsLeft = currentPlayer.sessionExpiresAt ? Math.max(0, Math.ceil((currentPlayer.sessionExpiresAt - Date.now()) / 60000)) : 5;
+    app.innerHTML = `
+      <div class="start-screen">
+        <h1>Welcome, ${escapeHtml(currentPlayer.empName)}! 🏥</h1>
+        <p class="welcome-text">Employee ID: <strong>${escapeHtml(currentPlayer.empId)}</strong></p>
+        <div style="background:#FAEEDA;border-left:4px solid #EF9F27;padding:10px 14px;border-radius:8px;max-width:560px;margin:16px auto;font-size:13px;color:#633806;text-align:left;">
+          ⏱ <strong>Session expires in ${minsLeft} min.</strong> Your Employee ID is valid for only 5 minutes after login.
+        </div>
+        <div class="rules-box">
+          <h3>📋 Gamethon Rules</h3>
+          <ul>
+            <li>You have <strong>120 seconds total</strong> for all 5 games</li>
+            <li>🔍 <strong>Spot the Difference</strong> — find 5 differences in the hospital scene</li>
+            <li>🔤 <strong>Jumble Puzzle</strong> — unscramble hospital-related words</li>
+            <li>🔗 <strong>Match the Word</strong> — pair 6 medical terms with their meanings</li>
+            <li>🗺️ <strong>Find the Way</strong> — guide the patient through the maze to the doctor</li>
+            <li>❌⭕ <strong>Cross or Zero</strong> — beat the computer at tic-tac-toe</li>
+            <li>Solve each game to auto-advance, or use <strong>Skip</strong> to move on</li>
+            <li>Timer runs continuously across all games. When it hits 0 → auto-submit.</li>
+          </ul>
+        </div>
+        <button class="start-btn" id="startBtn">▶ Start Gamethon</button>
+      </div>
+    `;
+    document.getElementById('startBtn').addEventListener('click', startGame);
+  }
+
+  // ======== GAME ORCHESTRATOR ========
+  function startGame() {
+    gameState = {
+      currentGame: 0,
+      timeRemaining: TOTAL_TIME,
+      timerInterval: null,
+      startTime: Date.now(),
+      gamesCompleted: 0,
+      breakdown: { spot: 'pending', jumble: 'pending', match: 'pending', maze: 'pending', ttt: 'pending' },
+      feedback: null,
+      // Per-game state
+      spot: { level: 0, found: [] },
+      jumble: { idx: 0, scrambled: [], selected: [] },
+      match: { matched: [], selWord: null, selMean: null, wrong: null, words: [], meanings: [] },
+      maze: { playerPos: null, won: false },
+      ttt: { board: Array(9).fill(''), turn: 'X', winner: null, winLine: null, mode: 'cpu' }
+    };
+    // init match arrays
+    gameState.match.words = [...MATCH_PAIRS.map((p, i) => ({ text: p.word, id: i }))].sort(() => Math.random() - 0.5);
+    gameState.match.meanings = [...MATCH_PAIRS.map((p, i) => ({ text: p.meaning, id: i }))].sort(() => Math.random() - 0.5);
+    // init maze player
+    for (let r = 0; r < MAZE.length; r++) {
+      for (let c = 0; c < MAZE[0].length; c++) {
+        if (MAZE[r][c] === 2) gameState.maze.playerPos = { r, c };
+      }
+    }
+    // scramble first jumble
+    loadJumble();
+    gameState.timerInterval = setInterval(tickTimer, 1000);
+    renderCurrentGame();
+    document.addEventListener('keydown', handleMazeKey);
+  }
+
+  function tickTimer() {
+    gameState.timeRemaining--;
+    if (gameState.timeRemaining <= 0) {
+      gameState.timeRemaining = 0;
+      clearInterval(gameState.timerInterval);
+      endGame('Timeout');
+      return;
+    }
+    const el = document.getElementById('timerDisplay');
+    if (el) {
+      el.textContent = formatTime(gameState.timeRemaining);
+      el.className = 'timer-pill' + (gameState.timeRemaining <= 10 ? ' danger' : gameState.timeRemaining <= 30 ? ' warning' : '');
+    }
+  }
+
+  function renderCurrentGame() {
+    const games = ['spot', 'jumble', 'match', 'maze', 'ttt'];
+    const g = games[gameState.currentGame];
+    if (!g) { endGame('Completed'); return; }
+    if (g === 'spot') renderSpot();
+    else if (g === 'jumble') renderJumble();
+    else if (g === 'match') renderMatch();
+    else if (g === 'maze') renderMaze();
+    else if (g === 'ttt') renderTTT();
+  }
+
+  function gameHeader(gameNum, gameTitle, subInfo) {
+    return `
+      <div class="game-header">
+        <div class="player-info">👤 <strong>${escapeHtml(currentPlayer.empName)}</strong> · ${escapeHtml(currentPlayer.empId)}</div>
+        <div class="game-stats">
+          <div class="stat-pill">Completed: <strong>${gameState.gamesCompleted} / 5</strong></div>
+          <div class="timer-pill" id="timerDisplay">${formatTime(gameState.timeRemaining)}</div>
+        </div>
+      </div>
+      <div class="level-info">
+        <div>Game <strong>${gameNum} of 5</strong> · <span style="color:#185FA5;font-weight:600;">${gameTitle}</span></div>
+        <div>${subInfo || ''}</div>
+      </div>
+    `;
+  }
+
+  function advanceGame(result) {
+    const games = ['spot', 'jumble', 'match', 'maze', 'ttt'];
+    const g = games[gameState.currentGame];
+    gameState.breakdown[g] = result;
+    if (result === 'solved') gameState.gamesCompleted++;
+    gameState.currentGame++;
+    gameState.feedback = null;
+    if (gameState.currentGame >= 5) {
+      endGame('Completed');
+      return;
+    }
+    renderCurrentGame();
+  }
+
+  // ======== SPOT THE DIFFERENCE ========
+  function renderSpot() {
+    const level = SPOT_LEVELS[gameState.spot.level];
+    const needed = 5;
+    const foundCount = gameState.spot.found.length;
+    app.innerHTML = gameHeader(1, '🔍 Spot the Difference', `Found: <strong style="color:#3B6D11;">${foundCount} / ${needed}</strong>`) +
+      (gameState.feedback ? `<div class="feedback ${gameState.feedback.type}">${gameState.feedback.text}</div>` : '') +
+      `<p class="instruction">👉 Scene: <strong>${level.name}</strong>. Click on the <strong>right image</strong> where you see a difference. Find all 5 to advance.</p>
+      <div class="spot-wrap">
+        <div class="spot-img">
+          <div class="spot-label">Original</div>
+          ${level.sceneA}
+        </div>
+        <div class="spot-img right" id="imgB">
+          <div class="spot-label">Find differences here</div>
+          ${level.sceneB}
+          ${gameState.spot.found.map(i => `<div class="spot-marker" style="left:${level.diffs[i].x}%;top:${level.diffs[i].y}%"></div>`).join('')}
+        </div>
+      </div>
+      <div class="game-actions">
+        <button class="btn-warn" id="skipBtn">⏭ Skip Game</button>
+        <div style="color:#888780;font-size:13px;align-self:center;">Tip: look carefully for missing, added, or color-changed items</div>
+      </div>`;
+    document.getElementById('imgB').addEventListener('click', handleSpotClick);
+    // Also bind touch for mobile reliability
+    document.getElementById('imgB').addEventListener('touchend', (e) => {
+      e.preventDefault();
+      const touch = e.changedTouches[0];
+      handleSpotClick({
+        currentTarget: e.currentTarget,
+        clientX: touch.clientX,
+        clientY: touch.clientY
+      });
+    });
+    document.getElementById('skipBtn').addEventListener('click', () => advanceGame('skipped'));
+  }
+
+  function handleSpotClick(e) {
+    const level = SPOT_LEVELS[gameState.spot.level];
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    for (let i = 0; i < level.diffs.length; i++) {
+      if (gameState.spot.found.includes(i)) continue;
+      const dx = x - level.diffs[i].x, dy = y - level.diffs[i].y;
+      if (Math.sqrt(dx*dx + dy*dy) < 12) {
+        gameState.spot.found.push(i);
+        if (gameState.spot.found.length >= 5) {
+          gameState.feedback = { type: 'success', text: '🎉 All 5 found! Moving to next game...' };
+          renderSpot();
+          setTimeout(() => advanceGame('solved'), 900);
+          return;
+        }
+        renderSpot();
+        return;
+      }
+    }
+    const marker = document.createElement('div');
+    marker.className = 'wrong-click';
+    marker.style.left = x + '%';
+    marker.style.top = y + '%';
+    e.currentTarget.appendChild(marker);
+    setTimeout(() => marker.remove(), 800);
+  }
+
+  // ======== JUMBLE ========
+  function scrambleWord(w) {
+    const arr = w.split('');
+    do { arr.sort(() => Math.random() - 0.5); } while (arr.join('') === w);
+    return arr;
+  }
+  function loadJumble() {
+    const p = JUMBLE_PUZZLES[gameState.jumble.idx];
+    gameState.jumble.scrambled = scrambleWord(p.word);
+    gameState.jumble.selected = [];
+  }
+
+  function renderJumble() {
+    const p = JUMBLE_PUZZLES[gameState.jumble.idx];
+    const j = gameState.jumble;
+    const answer = j.selected.map(i => j.scrambled[i]).join('');
+    const isCorrect = answer === p.word && j.selected.length === p.word.length;
+    const isWrong = j.selected.length === p.word.length && !isCorrect;
+    app.innerHTML = gameHeader(2, '🔤 Jumble Puzzle', `Puzzle <strong>${gameState.jumble.idx + 1} / ${JUMBLE_PUZZLES.length}</strong>`) +
+      (gameState.feedback ? `<div class="feedback ${gameState.feedback.type}">${gameState.feedback.text}</div>` : '') +
+      `<div class="jumble-area">
+        <div class="hint-box"><strong>💡 Hint:</strong> ${p.hint}</div>
+        <div class="answer-slots">
+          ${Array.from({length: p.word.length}).map((_, i) => {
+            if (i < j.selected.length) return `<div class="slot filled" data-idx="${i}">${j.scrambled[j.selected[i]]}</div>`;
+            return `<div class="slot"></div>`;
+          }).join('')}
+        </div>
+        ${isCorrect ? '<div class="feedback success">✅ Correct! Moving on...</div>' : ''}
+        ${isWrong ? '<div class="feedback error">❌ Not quite. Try rearranging the letters.</div>' : ''}
+        <div class="jumble-tiles">
+          ${j.scrambled.map((l, i) => {
+            const used = j.selected.includes(i);
+            return `<div class="letter-tile" data-i="${i}" style="${used ? 'opacity:0.25;pointer-events:none;' : ''}">${l}</div>`;
+          }).join('')}
+        </div>
+      </div>
+      <div class="game-actions">
+        <button class="btn-warn" id="skipBtn">⏭ Skip Game</button>
+        <button class="btn-secondary" id="clearBtn">Clear</button>
+      </div>`;
+
+    document.querySelectorAll('.letter-tile').forEach(t => {
+      t.addEventListener('click', () => {
+        const i = parseInt(t.dataset.i);
+        if (j.selected.length < p.word.length && !j.selected.includes(i)) {
+          j.selected.push(i);
+          const newAns = j.selected.map(x => j.scrambled[x]).join('');
+          if (newAns === p.word) {
+            gameState.feedback = { type: 'success', text: '✅ Correct! Moving to next game...' };
+            renderJumble();
+            setTimeout(() => {
+              // also mark jumble subprogress but overall this game counts as one solved
+              advanceGame('solved');
+            }, 900);
+            return;
+          }
+          renderJumble();
+        }
+      });
+    });
+    document.querySelectorAll('.slot.filled').forEach(s => {
+      s.addEventListener('click', () => {
+        const pos = parseInt(s.dataset.idx);
+        j.selected.splice(pos, 1);
+        renderJumble();
+      });
+    });
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      j.selected = [];
+      renderJumble();
+    });
+    document.getElementById('skipBtn').addEventListener('click', () => advanceGame('skipped'));
+  }
+
+  // ======== MATCH THE WORD ========
+  function renderMatch() {
+    const m = gameState.match;
+    const done = m.matched.length === MATCH_PAIRS.length;
+    app.innerHTML = gameHeader(3, '🔗 Match the Word', `Matched: <strong>${m.matched.length} / ${MATCH_PAIRS.length}</strong>`) +
+      (gameState.feedback ? `<div class="feedback ${gameState.feedback.type}">${gameState.feedback.text}</div>` : '') +
+      `<p class="instruction">👉 Tap a word on the left, then tap its correct meaning on the right.</p>
+      <div class="match-grid">
+        <div>
+          <div class="match-col-title">Medical Terms</div>
+          ${m.words.map(w => {
+            const isMatched = m.matched.includes(w.id);
+            const isSel = m.selWord === w.id;
+            const isWrong = m.wrong && m.wrong.w === w.id;
+            return `<div class="match-item ${isMatched ? 'matched' : ''} ${isSel ? 'selected' : ''} ${isWrong ? 'wrong' : ''}" data-w="${w.id}">${w.text}</div>`;
+          }).join('')}
+        </div>
+        <div>
+          <div class="match-col-title">Meanings</div>
+          ${m.meanings.map(x => {
+            const isMatched = m.matched.includes(x.id);
+            const isSel = m.selMean === x.id;
+            const isWrong = m.wrong && m.wrong.m === x.id;
+            return `<div class="match-item ${isMatched ? 'matched' : ''} ${isSel ? 'selected' : ''} ${isWrong ? 'wrong' : ''}" data-m="${x.id}">${x.text}</div>`;
+          }).join('')}
+        </div>
+      </div>
+      <div class="game-actions">
+        <button class="btn-warn" id="skipBtn">⏭ Skip Game</button>
+      </div>`;
+
+    document.querySelectorAll('[data-w]').forEach(el => {
+      el.addEventListener('click', () => {
+        const id = parseInt(el.dataset.w);
+        if (m.matched.includes(id)) return;
+        m.selWord = id;
+        checkMatch();
+      });
+    });
+    document.querySelectorAll('[data-m]').forEach(el => {
+      el.addEventListener('click', () => {
+        const id = parseInt(el.dataset.m);
+        if (m.matched.includes(id)) return;
+        m.selMean = id;
+        checkMatch();
+      });
+    });
+    document.getElementById('skipBtn').addEventListener('click', () => advanceGame('skipped'));
+  }
+
+  function checkMatch() {
+    const m = gameState.match;
+    if (m.selWord !== null && m.selMean !== null) {
+      if (m.selWord === m.selMean) {
+        m.matched.push(m.selWord);
+        m.selWord = null; m.selMean = null; m.wrong = null;
+        if (m.matched.length === MATCH_PAIRS.length) {
+          gameState.feedback = { type: 'success', text: '🎉 All matched! Moving to next game...' };
+          renderMatch();
+          setTimeout(() => advanceGame('solved'), 900);
+          return;
+        }
+        renderMatch();
+      } else {
+        m.wrong = { w: m.selWord, m: m.selMean };
+        renderMatch();
+        setTimeout(() => {
+          m.selWord = null; m.selMean = null; m.wrong = null;
+          renderMatch();
+        }, 700);
+      }
+    } else {
+      renderMatch();
+    }
+  }
+
+  // ======== MAZE (Patient → Doctor) ========
+  function renderMaze() {
+    const mz = gameState.maze;
+    app.innerHTML = gameHeader(4, '🗺️ Find the Way', `Guide patient 🤕 to doctor 👨‍⚕️`) +
+      (gameState.feedback ? `<div class="feedback ${gameState.feedback.type}">${gameState.feedback.text}</div>` : '') +
+      `<p class="instruction">👉 Use arrow keys on keyboard or the buttons below to move. Navigate through the open paths to reach the doctor!</p>
+      <div class="maze-wrap">
+        <div class="maze-grid" style="grid-template-columns: repeat(${MAZE[0].length}, 26px);" id="mazeGrid">
+          ${MAZE.map((row, r) => row.map((cell, c) => {
+            let cls = 'maze-cell ';
+            let content = '';
+            if (mz.playerPos.r === r && mz.playerPos.c === c) { cls += 'player'; content = '🤕'; }
+            else if (cell === 1) cls += 'wall';
+            else if (cell === 2) { cls += 'start'; content = '🏁'; }
+            else if (cell === 3) { cls += 'end'; content = '👨‍⚕️'; }
+            else cls += 'path';
+            return `<div class="${cls}">${content}</div>`;
+          }).join('')).join('')}
+        </div>
+      </div>
+      <div class="maze-controls">
+        <div class="maze-btn empty"></div>
+        <button class="maze-btn" data-dir="up">↑</button>
+        <div class="maze-btn empty"></div>
+        <button class="maze-btn" data-dir="left">←</button>
+        <button class="maze-btn" data-dir="down">↓</button>
+        <button class="maze-btn" data-dir="right">→</button>
+      </div>
+      <div class="game-actions" style="margin-top:20px;">
+        <button class="btn-warn" id="skipBtn">⏭ Skip Game</button>
+        <button class="btn-secondary" id="resetMaze">🔄 Reset Position</button>
+      </div>`;
+
+    document.querySelectorAll('.maze-btn[data-dir]').forEach(b => {
+      b.addEventListener('click', () => movePlayer(b.dataset.dir));
+    });
+
+    // Add swipe gesture support on the maze grid for mobile
+    const grid = document.getElementById('mazeGrid');
+    if (grid) {
+      let touchStartX = 0, touchStartY = 0;
+      grid.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+      }, { passive: true });
+      grid.addEventListener('touchend', (e) => {
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        if (Math.abs(dx) < 20 && Math.abs(dy) < 20) return; // ignore tiny moves
+        if (Math.abs(dx) > Math.abs(dy)) {
+          movePlayer(dx > 0 ? 'right' : 'left');
+        } else {
+          movePlayer(dy > 0 ? 'down' : 'up');
+        }
+      }, { passive: true });
+    }
+
+    document.getElementById('skipBtn').addEventListener('click', () => advanceGame('skipped'));
+    document.getElementById('resetMaze').addEventListener('click', () => {
+      for (let r = 0; r < MAZE.length; r++) {
+        for (let c = 0; c < MAZE[0].length; c++) {
+          if (MAZE[r][c] === 2) mz.playerPos = { r, c };
+        }
+      }
+      renderMaze();
+    });
+  }
+
+  function handleMazeKey(e) {
+    if (!gameState || gameState.currentGame !== 3) return;
+    const keyMap = { 'ArrowUp': 'up', 'ArrowDown': 'down', 'ArrowLeft': 'left', 'ArrowRight': 'right',
+                     'w': 'up', 's': 'down', 'a': 'left', 'd': 'right',
+                     'W': 'up', 'S': 'down', 'A': 'left', 'D': 'right' };
+    const dir = keyMap[e.key];
+    if (dir) { e.preventDefault(); movePlayer(dir); }
+  }
+
+  function movePlayer(dir) {
+    const mz = gameState.maze;
+    if (mz.won) return;
+    let { r, c } = mz.playerPos;
+    if (dir === 'up') r--;
+    else if (dir === 'down') r++;
+    else if (dir === 'left') c--;
+    else if (dir === 'right') c++;
+    if (r < 0 || r >= MAZE.length || c < 0 || c >= MAZE[0].length) return;
+    if (MAZE[r][c] === 1) return; // wall
+    mz.playerPos = { r, c };
+    if (MAZE[r][c] === 3) {
+      mz.won = true;
+      gameState.feedback = { type: 'success', text: '🎉 You reached the doctor! Completing challenge...' };
+      renderMaze();
+      setTimeout(() => advanceGame('solved'), 1000);
+      return;
+    }
+    renderMaze();
+  }
+
+  // ======== TIC-TAC-TOE (Cross or Zero) ========
+  const TTT_LINES = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+
+  function tttCheckWin(b) {
+    for (const line of TTT_LINES) {
+      const [a, c, d] = line;
+      if (b[a] && b[a] === b[c] && b[a] === b[d]) return { winner: b[a], line };
+    }
+    if (b.every(x => x)) return { winner: 'D', line: null };
+    return null;
+  }
+
+  function tttMinimax(b, player) {
+    const res = tttCheckWin(b);
+    if (res) {
+      if (res.winner === 'O') return { score: 1 };
+      if (res.winner === 'X') return { score: -1 };
+      return { score: 0 };
+    }
+    let best = player === 'O' ? { score: -Infinity } : { score: Infinity };
+    for (let i = 0; i < 9; i++) {
+      if (!b[i]) {
+        b[i] = player;
+        const r = tttMinimax(b, player === 'O' ? 'X' : 'O');
+        b[i] = '';
+        if (player === 'O' && r.score > best.score) best = { score: r.score, move: i };
+        if (player === 'X' && r.score < best.score) best = { score: r.score, move: i };
+      }
+    }
+    return best;
+  }
+
+  function tttCpuMove() {
+    const t = gameState.ttt;
+    const empty = t.board.map((v, i) => v ? null : i).filter(x => x !== null);
+    if (empty.length === 0) return;
+    // Medium-hard: 95% optimal, 5% random — player must play smart to win
+    let move;
+    if (Math.random() < 0.95) {
+      move = tttMinimax([...t.board], 'O').move;
+    } else {
+      move = empty[Math.floor(Math.random() * empty.length)];
+    }
+    if (move === undefined) move = empty[0];
+    t.board[move] = 'O';
+    t.turn = 'X';
+    const res = tttCheckWin(t.board);
+    if (res) { t.winner = res.winner; t.winLine = res.line; }
+    renderTTT();
+    checkTTTResult();
+  }
+
+  function renderTTT() {
+    const t = gameState.ttt;
+    let statusHtml, statusCls = '';
+    if (t.winner === 'X') { statusHtml = '🏆 You win! Advancing...'; statusCls = 'win'; }
+    else if (t.winner === 'O') { statusHtml = '😞 Computer wins. Moving on...'; statusCls = 'lose'; }
+    else if (t.winner === 'D') { statusHtml = '🤝 Draw! Moving on...'; statusCls = 'draw'; }
+    else { statusHtml = t.turn === 'X' ? "Your turn (X)" : "Computer thinking..."; }
+
+    app.innerHTML = gameHeader(5, '❌⭕ Cross or Zero', `Beat the computer to solve this game`) +
+      (gameState.feedback ? `<div class="feedback ${gameState.feedback.type}">${gameState.feedback.text}</div>` : '') +
+      `<p class="instruction">👉 You are <strong style="color:#185FA5;">X</strong>. Get three in a row to win! Only a <strong>win</strong> counts as solved — a draw or loss still moves you on.</p>
+      <div class="ttt-wrap">
+        <div class="ttt-status ${statusCls}">${statusHtml}</div>
+        <div class="ttt-board">
+          ${t.board.map((v, i) => {
+            const inWin = t.winLine && t.winLine.includes(i);
+            return `<div class="ttt-cell ${v === 'X' ? 'x' : v === 'O' ? 'o' : ''} ${inWin ? 'winning-cell' : ''}" data-i="${i}">${v}</div>`;
+          }).join('')}
+        </div>
+      </div>
+      <div class="game-actions">
+        <button class="btn-warn" id="skipBtn">⏭ Skip Game</button>
+        <button class="btn-secondary" id="resetTTT">🔄 New Round</button>
+      </div>`;
+
+    document.querySelectorAll('.ttt-cell').forEach(c => {
+      c.addEventListener('click', () => {
+        const i = parseInt(c.dataset.i);
+        if (t.board[i] || t.winner) return;
+        if (t.turn !== 'X') return;
+        t.board[i] = t.turn;
+        const res = tttCheckWin(t.board);
+        if (res) {
+          t.winner = res.winner; t.winLine = res.line;
+          renderTTT();
+          checkTTTResult();
+          return;
+        }
+        t.turn = t.turn === 'X' ? 'O' : 'X';
+        renderTTT();
+        if (t.turn === 'O' && !t.winner) {
+          setTimeout(tttCpuMove, 400);
+        }
+      });
+    });
+    document.getElementById('skipBtn').addEventListener('click', () => advanceGame('skipped'));
+    document.getElementById('resetTTT').addEventListener('click', () => {
+      t.board = Array(9).fill(''); t.turn = 'X'; t.winner = null; t.winLine = null;
+      renderTTT();
+    });
+  }
+
+  function checkTTTResult() {
+    const t = gameState.ttt;
+    if (!t.winner) return;
+    setTimeout(() => advanceGame(t.winner === 'X' ? 'solved' : 'skipped'), 1200);
+  }
+
+  // ======== END GAME ========
+  function endGame(status) {
+    clearInterval(gameState.timerInterval);
+    document.removeEventListener('keydown', handleMazeKey);
+    const timeTaken = TOTAL_TIME - gameState.timeRemaining;
+    currentPlayer.status = status;
+    currentPlayer.gamesCompleted = gameState.gamesCompleted;
+    currentPlayer.timeTaken = timeTaken;
+    currentPlayer.breakdown = gameState.breakdown;
+    currentPlayer.finishedAt = new Date().toISOString();
+    savePlayer(currentPlayer);
+    renderResults(status, timeTaken);
+  }
+
+  function renderResults(status, timeTaken) {
+    if (sessionCheckInterval) { clearInterval(sessionCheckInterval); sessionCheckInterval = null; }
+    const isTimeout = status === 'Timeout';
+    const bd = gameState.breakdown;
+    const labels = { spot: '🔍 Spot the Difference', jumble: '🔤 Jumble Puzzle', match: '🔗 Match the Word', maze: '🗺️ Find the Way', ttt: '❌⭕ Cross or Zero' };
+    const statusLabels = {
+      solved: { cls: 'solved', text: '✅ Solved' },
+      skipped: { cls: 'skipped', text: '⏭ Skipped' },
+      pending: { cls: 'missed', text: '⏱ Not reached' }
+    };
+
+    const rankInfo = calculateRank(currentPlayer);
+    const rankText = rankInfo.rank > 0 ? ordinal(rankInfo.rank) : 'N/A';
+    const rankColor = rankInfo.rank === 1 ? '#FAC775' : rankInfo.rank === 2 ? '#D3D1C7' : rankInfo.rank === 3 ? '#F0997B' : '#185FA5';
+    const rankEmoji = rankInfo.rank === 1 ? '🥇' : rankInfo.rank === 2 ? '🥈' : rankInfo.rank === 3 ? '🥉' : '🏅';
+
+    app.innerHTML = `
+      <div class="results">
+        <h1>${isTimeout ? '⏰ Time\'s Up!' : '🏆 Gamethon Complete!'}</h1>
+        <div class="result-badge ${isTimeout ? 'timeout' : 'completed'}">${status}</div>
+        <p class="welcome-text">Great effort, <strong>${escapeHtml(currentPlayer.empName)}</strong>!</p>
+        <div class="result-stats">
+          <div class="result-stat">
+            <div class="label">Games Solved</div>
+            <div class="value">${gameState.gamesCompleted} / 5</div>
+          </div>
+          <div class="result-stat">
+            <div class="label">Time Taken</div>
+            <div class="value">${formatTime(timeTaken)}</div>
+          </div>
+          <div class="result-stat">
+            <div class="label">Status</div>
+            <div class="value" style="font-size:18px;">${status}</div>
+          </div>
+        </div>
+        <div class="game-breakdown">
+          <h3>📋 Game Breakdown</h3>
+          ${Object.keys(labels).map(k => {
+            const s = statusLabels[bd[k]];
+            return `<div class="breakdown-row">
+              <span>${labels[k]}</span>
+              <span class="status ${s.cls}">${s.text}</span>
+            </div>`;
+          }).join('')}
+        </div>
+        <div class="action-row">
+          <button class="btn-secondary" id="logout">🚪 Logout</button>
+        </div>
+      </div>
+    `;
+    document.getElementById('logout').addEventListener('click', () => {
+      if (sessionCheckInterval) { clearInterval(sessionCheckInterval); sessionCheckInterval = null; }
+      currentPlayer = null;
+      renderLogin();
+    });
+
+    // Show rank dashboard popup immediately
+    setTimeout(() => showRankDashboard(rankInfo, timeTaken), 300);
+  }
+
+  function showRankDashboard(rankInfo, timeTaken) {
+    const existing = document.getElementById('rankModal');
+    if (existing) existing.remove();
+    const rank = rankInfo.rank;
+    const total = rankInfo.total;
+    const rankColor = rank === 1 ? '#FAC775' : rank === 2 ? '#D3D1C7' : rank === 3 ? '#F0997B' : '#185FA5';
+    const rankEmoji = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : '🏅';
+    const message = rank === 1 ? "You're in 1st place! Champion 🎉" :
+                    rank <= 3 ? `Excellent! You're on the podium!` :
+                    rank <= 10 ? `Great job! You made it to the Top 10!` :
+                    `Well played! Keep practicing to climb the ranks.`;
+
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.id = 'rankModal';
+    modal.innerHTML = `
+      <div class="modal-box" style="text-align:center;max-width:420px;">
+        <div style="font-size:64px;margin-bottom:8px;">${rankEmoji}</div>
+        <h2 style="font-size:18px;color:#5F5E5A;margin-bottom:4px;font-weight:500;">Your Position</h2>
+        <div style="font-size:48px;font-weight:800;color:${rankColor};line-height:1;margin:8px 0;">${ordinal(rank)}</div>
+        <p style="font-size:14px;color:#5F5E5A;margin-bottom:16px;">out of ${total} player${total !== 1 ? 's' : ''}</p>
+        <div style="background:#F1EFE8;padding:14px;border-radius:10px;margin-bottom:16px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px;">
+            <div>
+              <div style="color:#888780;text-transform:uppercase;letter-spacing:0.5px;font-size:11px;">Solved</div>
+              <div style="font-size:22px;font-weight:700;color:#0C447C;">${gameState.gamesCompleted}/5</div>
+            </div>
+            <div>
+              <div style="color:#888780;text-transform:uppercase;letter-spacing:0.5px;font-size:11px;">Time</div>
+              <div style="font-size:22px;font-weight:700;color:#0C447C;">${formatTime(timeTaken)}</div>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:14px;color:#444441;font-weight:500;margin-bottom:18px;">${message}</p>
+        <button class="btn-primary" style="width:100%;margin-top:0;" id="rankClose">View Details</button>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    document.getElementById('rankClose').addEventListener('click', () => modal.remove());
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+  }
+
+  // ======== ADMIN ========
+  let adminTab = 'employees';
+  function renderAdmin() {
+    const data = loadData();
+    app.innerHTML = `
+      <h1>📊 Admin Panel</h1>
+      <p class="subtitle">View employee progress and leaderboard</p>
+      <div class="admin-tabs">
+        <button class="admin-tab ${adminTab==='employees'?'active':''}" data-tab="employees">👥 Employee Status</button>
+        <button class="admin-tab ${adminTab==='leaderboard'?'active':''}" data-tab="leaderboard">🏆 Leaderboard (Top 10)</button>
+      </div>
+      <div id="adminContent"></div>
+      <div style="margin-top:24px;display:flex;gap:12px;justify-content:space-between;flex-wrap:wrap;">
+        <button class="btn-secondary" id="exitAdmin">← Back to Game</button>
+        <button class="btn-warn" id="clearData">🗑 Clear All Data</button>
+      </div>
+    `;
+    document.querySelectorAll('.admin-tab').forEach(t => {
+      t.addEventListener('click', () => { adminTab = t.dataset.tab; renderAdmin(); });
+    });
+    document.getElementById('exitAdmin').addEventListener('click', () => {
+      if (currentPlayer) renderStart(); else renderLogin();
+    });
+    document.getElementById('clearData').addEventListener('click', () => {
+      if (confirm('Delete ALL game records? This cannot be undone.')) {
+        saveData({ players: [] });
+        renderAdmin();
+      }
+    });
+    if (adminTab === 'employees') renderEmployees(data);
+    else renderLeaderboard(data);
+  }
+
+  function renderEmployees(data) {
+    const container = document.getElementById('adminContent');
+    if (!data.players.length) {
+      container.innerHTML = `<div class="empty-state">📭 No employee records yet.<br><small>Records appear here after players log in.</small></div>`;
+      return;
+    }
+    const sorted = [...data.players].sort((a, b) => new Date(b.startedAt) - new Date(a.startedAt));
+    container.innerHTML = `
+      <div style="overflow-x:auto;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Employee ID</th>
+            <th>Games Completed</th>
+            <th>Time Taken</th>
+            <th>Status</th>
+            <th>Started</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${sorted.map(p => `
+            <tr>
+              <td><strong>${escapeHtml(p.empName)}</strong></td>
+              <td>${escapeHtml(p.empId)}</td>
+              <td>${p.gamesCompleted || 0} / 5</td>
+              <td>${p.status === 'In Progress' ? '—' : formatTime(p.timeTaken || 0)}</td>
+              <td><span class="status-badge ${p.status==='Completed'?'completed':p.status==='Timeout'?'timeout':p.status==='Session Expired'?'expired':'progress'}">${p.status}</span></td>
+              <td style="color:#888780;font-size:12px;">${new Date(p.startedAt).toLocaleString()}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+      </div>
+      <p style="margin-top:12px;font-size:13px;color:#888780;">Total records: ${data.players.length}</p>
+    `;
+  }
+
+  function renderLeaderboard(data) {
+    const container = document.getElementById('adminContent');
+    const finished = data.players.filter(p => p.status !== 'In Progress');
+    if (!finished.length) {
+      container.innerHTML = `<div class="empty-state">🏆 No completed games yet.<br><small>Leaderboard will populate as employees finish their challenge.</small></div>`;
+      return;
+    }
+    const sorted = [...finished].sort((a, b) => {
+      const aG = a.gamesCompleted || 0, bG = b.gamesCompleted || 0;
+      if (bG !== aG) return bG - aG;
+      return (a.timeTaken || 0) - (b.timeTaken || 0);
+    }).slice(0, 10);
+    container.innerHTML = `
+      <div style="overflow-x:auto;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width:60px;">Rank</th>
+            <th>Name</th>
+            <th>Employee ID</th>
+            <th>Games Solved</th>
+            <th>Time Taken</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${sorted.map((p, i) => `
+            <tr>
+              <td>
+                <span class="rank-badge ${i===0?'gold':i===1?'silver':i===2?'bronze':''}">
+                  ${i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)}
+                </span>
+              </td>
+              <td><strong>${escapeHtml(p.empName)}</strong></td>
+              <td>${escapeHtml(p.empId)}</td>
+              <td><strong style="color:#185FA5;">${p.gamesCompleted || 0} / 5</strong></td>
+              <td><strong>${formatTime(p.timeTaken || 0)}</strong></td>
+              <td><span class="status-badge ${p.status==='Completed'?'completed':'timeout'}">${p.status}</span></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+      </div>
+      <p style="margin-top:12px;font-size:13px;color:#888780;">Ranked by most games solved. Ties broken by fastest time.</p>
+    `;
+  }
+
+  // ======== INIT ========
+  function showAdminLogin() {
+    // Remove any existing modal
+    const existing = document.getElementById('adminModal');
+    if (existing) existing.remove();
+
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.id = 'adminModal';
+    modal.innerHTML = `
+      <div class="modal-box">
+        <h2>🔐 Admin Login</h2>
+        <p>Enter the admin password to view employee records and leaderboard.</p>
+        <input type="password" id="adminPwdInput" placeholder="Password" autofocus />
+        <div class="modal-err" id="adminErr">Incorrect password. Try "admin" or "admin123".</div>
+        <div class="modal-actions">
+          <button class="btn-secondary" id="adminCancel">Cancel</button>
+          <button class="btn-primary" style="width:auto;margin-top:0;" id="adminSubmit">Login</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    const input = document.getElementById('adminPwdInput');
+    const err = document.getElementById('adminErr');
+    const close = () => modal.remove();
+
+    function submit() {
+      const pwd = (input.value || '').trim().toLowerCase();
+      if (pwd === 'admin' || pwd === 'admin123' || pwd === 'indira' || pwd === 'indira123') {
+        close();
+        if (gameState && gameState.timerInterval) clearInterval(gameState.timerInterval);
+        document.removeEventListener('keydown', handleMazeKey);
+        renderAdmin();
+      } else {
+        err.style.display = 'block';
+        input.value = '';
+        input.focus();
+      }
+    }
+
+    document.getElementById('adminSubmit').addEventListener('click', submit);
+    document.getElementById('adminCancel').addEventListener('click', close);
+    input.addEventListener('keypress', (e) => { if (e.key === 'Enter') submit(); });
+    modal.addEventListener('click', (e) => { if (e.target === modal) close(); });
+
+    // Focus input reliably
+    setTimeout(() => input.focus(), 50);
+  }
+
+  adminBtn.addEventListener('click', showAdminLogin);
+
+  renderLogin();
+})();
+</script>
+</body>
+</html>
