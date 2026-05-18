@@ -944,19 +944,48 @@
     [0,0,0,0,0,0,0,0,0,0,0,0,3]
   ];
 
-  // ======== STORAGE ========
-  function loadData() {
+  // ======== STORAGE (MongoDB via API, localStorage fallback) ========
+  const API_BASE = '';
+  let cachedData = { players: [] };
+
+  function loadFromLocalStorage() {
     try {
       const d = localStorage.getItem(STORAGE_KEY);
       return d ? JSON.parse(d) : { players: [] };
     } catch { return { players: [] }; }
   }
-  function saveData(d) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); } catch {} }
+  function saveToLocalStorage(d) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); } catch {}
+  }
+  async function initStorage() {
+    try {
+      const res = await fetch(`${API_BASE}/api/players`);
+      if (res.ok) cachedData = await res.json();
+      else cachedData = loadFromLocalStorage();
+    } catch {
+      cachedData = loadFromLocalStorage();
+    }
+  }
+  function loadData() {
+    return cachedData;
+  }
+  async function saveData(d) {
+    cachedData = d;
+    saveToLocalStorage(d);
+    if (!d.players.length) {
+      try { await fetch(`${API_BASE}/api/players`, { method: 'DELETE' }); } catch {}
+    }
+  }
   function savePlayer(p) {
     const data = loadData();
     const i = data.players.findIndex(x => x.empId === p.empId && x.sessionId === p.sessionId);
     if (i >= 0) data.players[i] = p; else data.players.push(p);
-    saveData(data);
+    saveToLocalStorage(data);
+    fetch(`${API_BASE}/api/players`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(p),
+    }).catch(() => {});
   }
 
   function escapeHtml(s) {
@@ -1721,9 +1750,9 @@
     document.getElementById('exitAdmin').addEventListener('click', () => {
       if (currentPlayer) renderStart(); else renderLogin();
     });
-    document.getElementById('clearData').addEventListener('click', () => {
+    document.getElementById('clearData').addEventListener('click', async () => {
       if (confirm('Delete ALL game records? This cannot be undone.')) {
-        saveData({ players: [] });
+        await saveData({ players: [] });
         renderAdmin();
       }
     });
@@ -1868,7 +1897,7 @@
 
   adminBtn.addEventListener('click', showAdminLogin);
 
-  renderLogin();
+  initStorage().then(() => renderLogin());
 })();
 </script>
 </body>
